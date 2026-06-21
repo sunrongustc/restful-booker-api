@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { MYBOOK } from '../../data/booking.data';
+import { MYBOOK, MYBOOK_FOR_UPDATE } from '../../data/booking.data';
 import { BookingApi } from '../../api/BookingApi';
 
 test('GET API', async ({ request }) => {
@@ -39,15 +39,12 @@ test('UPDATE API', async ({ request }) => {
   expect(typeof dataFromPost.bookingid).toBe("number");
 
   const bookingid = dataFromPost.bookingid;
-  const myBooking = structuredClone(MYBOOK);
-  myBooking.firstname = "Max";
-  myBooking.totalprice = 234;
 
-  const dataFromPut = await bookingApi.updateBooking(bookingid,myBooking);
-  expect(dataFromPut).toMatchObject(myBooking);
+  const dataFromPut = await bookingApi.updateBooking(bookingid,MYBOOK_FOR_UPDATE);
+  expect(dataFromPut).toMatchObject(MYBOOK_FOR_UPDATE);
 
   const dataFromGet = await bookingApi.getBooking(bookingid);
-  expect(dataFromGet).toMatchObject(myBooking);
+  expect(dataFromGet).toMatchObject(MYBOOK_FOR_UPDATE);
 });
 
 test.only('DELETE API', async ({ request }) => {

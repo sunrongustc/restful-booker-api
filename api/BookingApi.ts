@@ -32,6 +32,26 @@ export class BookingApi {
         return response.status();
     }
 
+    async updateBookingStatusCode(id: number, data: Booking): Promise<number> {
+        const response = await this.request.put(`${this.bookingUrl}/${id}`, {
+            data, headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Cookie": `token=${this.token}`,
+            }
+        });
+        return response.status();
+    }
+
+    async deleteBookingStatusCode(id: number): Promise<number> {
+        const response = await this.request.delete(`${this.bookingUrl}/${id}`, {
+            headers: {
+                "Cookie": `token=${this.token}`,
+            }
+        });
+        return response.status();
+    }
+
     async createBooking(data: Booking): Promise<{ bookingid: number, booking: Booking }> {
         const response = await this.request.post(this.bookingUrl, { data });
         expect(response.status()).toBe(200);
