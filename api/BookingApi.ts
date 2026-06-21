@@ -1,4 +1,4 @@
-import { APIRequestContext, expect } from "@playwright/test";
+import { APIRequestContext, APIResponse, expect } from "@playwright/test";
 
 export class BookingApi {
 
@@ -15,74 +15,37 @@ export class BookingApi {
         this.request = request;
     }
 
-    async auth(): Promise<void> {
+    setToken(token: string): void {
+        this.token = token;
+    }
+
+    async auth(): Promise<string> {
         const response = await this.request.post(this.authUrl, { data: this.authData });
-        expect(response.status()).toBe(200);
-        this.token = (await response.json()).token;
+        await expect(response).toBeOK();
+        return (await response.json()).token;
     }
 
-    async getBooking(id: number): Promise<Booking> {
-        const response = await this.request.get(`${this.bookingUrl}/${id}`);
-        expect(response.status()).toBe(200);
-        return await response.json();
+    async getBooking(id: number): Promise<APIResponse> {
+        return await this.request.get(`${this.bookingUrl}/${id}`);
     }
 
-    async getBookingStatusCode(id: number): Promise<number> {
-        const response = await this.request.get(`${this.bookingUrl}/${id}`);
-        return response.status();
+    async createBooking(data: Booking): Promise<APIResponse> {
+        return await this.request.post(this.bookingUrl, { data });
     }
 
-    async updateBookingStatusCode(id: number, data: Booking): Promise<number> {
-        const response = await this.request.put(`${this.bookingUrl}/${id}`, {
+    async updateBooking(id: number, data: Booking): Promise<APIResponse> {
+        return await this.request.put(`${this.bookingUrl}/${id}`, {
             data, headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
                 "Cookie": `token=${this.token}`,
             }
         });
-        return response.status();
     }
 
-    async deleteBookingStatusCode(id: number): Promise<number> {
-        const response = await this.request.delete(`${this.bookingUrl}/${id}`, {
+    async deleteBooking(id: number): Promise<APIResponse> {
+        return await this.request.delete(`${this.bookingUrl}/${id}`, {
             headers: {
                 "Cookie": `token=${this.token}`,
             }
         });
-        return response.status();
-    }
-
-    async createBooking(data: Booking): Promise<{ bookingid: number, booking: Booking }> {
-        const response = await this.request.post(this.bookingUrl, { data });
-        expect(response.status()).toBe(200);
-        return await response.json();
-    }
-
-    async updateBooking(id: number, data: Booking): Promise<Booking> {
-        if (!this.token) {
-            throw new Error("Please call auth() first");
-        }
-        const response = await this.request.put(`${this.bookingUrl}/${id}`, {
-            data, headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "Cookie": `token=${this.token}`,
-            }
-        });
-        expect(response.status()).toBe(200);
-        return await response.json();
-    }
-
-    async deleteBooking(id: number): Promise<string> {
-        if (!this.token) {
-            throw new Error("Please call auth() first");
-        }
-        const response = await this.request.delete(`${this.bookingUrl}/${id}`, {
-            headers: {
-                "Cookie": `token=${this.token}`,
-            }
-        });
-        expect(response.status()).toBe(201);
-        return await response.text();
     }
 }

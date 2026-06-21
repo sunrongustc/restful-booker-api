@@ -8,7 +8,3 @@ interface Booking {
     checkout: string;
   };
 }
-
-interface Token {
-    "token": string
-}
