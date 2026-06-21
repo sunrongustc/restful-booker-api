@@ -4,8 +4,8 @@ import { Booking } from "../types/Booking";
 export class BookingApi {
 
     private readonly request: APIRequestContext;
-    private readonly bookingUrl = "https://restful-booker.herokuapp.com/booking";
-    private readonly authUrl = "https://restful-booker.herokuapp.com/auth";
+    private readonly bookingUrl = `${process.env.BASE_URL}/booking`;
+    private readonly authUrl = `${process.env.BASE_URL}/auth`;
     private readonly authData = {
         "username": "admin",
         "password": "password123"
