@@ -27,6 +27,11 @@ export class BookingApi {
         return await response.json();
     }
 
+    async getBookingStatusCode(id: number): Promise<number> {
+        const response = await this.request.get(`${this.bookingUrl}/${id}`);
+        return response.status();
+    }
+
     async createBooking(data: Booking): Promise<{ bookingid: number, booking: Booking }> {
         const response = await this.request.post(this.bookingUrl, { data });
         expect(response.status()).toBe(200);
@@ -46,5 +51,18 @@ export class BookingApi {
         });
         expect(response.status()).toBe(200);
         return await response.json();
+    }
+
+    async deleteBooking(id: number): Promise<string> {
+        if (!this.token) {
+            throw new Error("Please call auth() first");
+        }
+        const response = await this.request.delete(`${this.bookingUrl}/${id}`, {
+            headers: {
+                "Cookie": `token=${this.token}`,
+            }
+        });
+        expect(response.status()).toBe(201);
+        return await response.text();
     }
 }

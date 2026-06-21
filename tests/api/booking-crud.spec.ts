@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { MYBOOK } from '../data/booking.data';
-import { BookingApi } from './BookingApi';
+import { MYBOOK } from '../../data/booking.data';
+import { BookingApi } from '../../api/BookingApi';
 
 test('GET API', async ({ request }) => {
   const bookingApi = new BookingApi(request);
@@ -29,7 +29,7 @@ test('POST API', async ({ request }) => {
 });
 
 
-test.only('UPDATE API', async ({ request }) => {
+test('UPDATE API', async ({ request }) => {
   const bookingApi = new BookingApi(request);
   await bookingApi.auth();
  
@@ -48,5 +48,21 @@ test.only('UPDATE API', async ({ request }) => {
 
   const dataFromGet = await bookingApi.getBooking(bookingid);
   expect(dataFromGet).toMatchObject(myBooking);
+});
 
+test.only('DELETE API', async ({ request }) => {
+  const bookingApi = new BookingApi(request);
+  await bookingApi.auth();
+ 
+  const dataFromPost = await bookingApi.createBooking(MYBOOK);
+  expect(dataFromPost.booking).toMatchObject(MYBOOK);
+  expect(dataFromPost.bookingid).toBeTruthy();
+  expect(typeof dataFromPost.bookingid).toBe("number");
+
+  const bookingid = dataFromPost.bookingid;
+  const dataFromDelete = await bookingApi.deleteBooking(bookingid);
+  expect(dataFromDelete).toBe("Created");
+
+  const statusCode = await bookingApi.getBookingStatusCode(bookingid);
+  expect(statusCode).toBe(404);
 });
