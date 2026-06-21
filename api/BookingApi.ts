@@ -1,4 +1,5 @@
 import { APIRequestContext, APIResponse, expect } from "@playwright/test";
+import { Booking } from "../types/Booking";
 
 export class BookingApi {
 

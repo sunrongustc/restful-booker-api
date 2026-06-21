@@ -1,4 +1,4 @@
-interface Booking {
+export interface Booking {
   firstname: string;
   lastname: string;
   totalprice: number;
