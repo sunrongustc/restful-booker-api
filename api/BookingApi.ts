@@ -3,17 +3,18 @@ import { Booking } from "../types/Booking";
 
 export class BookingApi {
 
-    private readonly request: APIRequestContext;
     private readonly bookingUrl = `${process.env.BASE_URL}/booking`;
     private readonly authUrl = `${process.env.BASE_URL}/auth`;
     private readonly authData = {
-        "username": "admin",
-        "password": "password123"
+        "username": process.env.BOOKING_USER ?? "admin",
+        "password": process.env.BOOKING_PASSWORD ?? "password123"
     }
+
+    //Token must be set via setToken() after calling auth()
+    //Token used by updateBooking & deleteBooking  
     private token = "";
 
-    constructor(request: APIRequestContext) {
-        this.request = request;
+    constructor(private request: APIRequestContext) {
     }
 
     setToken(token: string): void {
