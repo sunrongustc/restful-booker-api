@@ -4,7 +4,7 @@ import { BookingApi } from '../../api/BookingApi';
 
 test.describe('Booking API - Positive', () => {
 
-  test('get a booking', async ({ request }) => {
+  test('@smoke @regression get a booking', async ({ request }) => {
     const bookingApi = new BookingApi(request);
 
     //Create a booking first and get the booking via valid bookingid 
@@ -18,7 +18,7 @@ test.describe('Booking API - Positive', () => {
     expect(dataFromGet).toMatchObject(MYBOOK);
   });
 
-  test('create a booking', async ({ request }) => {
+  test('@smoke @regression create a booking', async ({ request }) => {
     const bookingApi = new BookingApi(request);
 
     const responseFromCreate = await bookingApi.createBooking(MYBOOK);
@@ -34,7 +34,7 @@ test.describe('Booking API - Positive', () => {
     expect(dataFromGet).toMatchObject(MYBOOK);
   });
 
-  test('update a booking', async ({ request }) => {
+  test('@smoke @regression update a booking', async ({ request }) => {
     const bookingApi = new BookingApi(request);
     const token = await bookingApi.auth();
     bookingApi.setToken(token);
@@ -57,7 +57,7 @@ test.describe('Booking API - Positive', () => {
     expect(dataFromGet).toMatchObject(MYBOOK_FOR_UPDATE);
   });
 
-  test('delete a booking', async ({ request }) => {
+  test('@smoke @regression delete a booking', async ({ request }) => {
     const bookingApi = new BookingApi(request);
     const token = await bookingApi.auth();
     bookingApi.setToken(token);
@@ -71,7 +71,7 @@ test.describe('Booking API - Positive', () => {
     const bookingid = dataFromCreate.bookingid;
     const responseFromDelete = await bookingApi.deleteBooking(bookingid);
     await expect(responseFromDelete).toBeOK();
-    
+
     const responseFromGet = await bookingApi.getBooking(bookingid);
     expect(responseFromGet.status()).toBe(404);
   });

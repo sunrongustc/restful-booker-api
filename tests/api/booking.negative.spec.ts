@@ -5,7 +5,7 @@ import { MYBOOK, MYBOOK_FOR_UPDATE } from '../../data/booking.data';
 
 test.describe('Booking API - Negative', () => {
 
-    test('get an non-existent booking', async ({ request }) => {
+    test('@negative @regression get an non-existent booking', async ({ request }) => {
         const bookingApi = new BookingApi(request);
         // -1 will never be a valid bookingid
         const bookingid = -1;
@@ -13,7 +13,7 @@ test.describe('Booking API - Negative', () => {
         expect(responseFromGet.status()).toBe(404);
     });
 
-    test('delete a booking twice', async ({ request }) => {
+    test('@negative @regression delete a booking twice', async ({ request }) => {
         const bookingApi = new BookingApi(request);
         const token = await bookingApi.auth();
         bookingApi.setToken(token);
@@ -37,7 +37,7 @@ test.describe('Booking API - Negative', () => {
         expect(responseFromDelete_2.status()).toBe(405);
     });
 
-    test('update a deleted booking', async ({ request }) => {
+    test('@negative @regression update a deleted booking', async ({ request }) => {
         const bookingApi = new BookingApi(request);
         const token = await bookingApi.auth();
         bookingApi.setToken(token);
@@ -45,7 +45,7 @@ test.describe('Booking API - Negative', () => {
         const responseFromCreate = await bookingApi.createBooking(MYBOOK);
         await expect(responseFromCreate).toBeOK();
         const dataFromCreate = await responseFromCreate.json();
-        
+
         const bookingid = dataFromCreate.bookingid;
         expect(bookingid).toEqual(expect.any(Number));
         expect(dataFromCreate.booking).toMatchObject(MYBOOK);
